@@ -1,0 +1,196 @@
+#Can Adalı, 0071232, CMSE501 Fall2019 Assignment1-Population, Python3
+import random
+import numpy as np
+import math
+
+
+'Policy 1 is one child per couple'
+#Case 1. Fixed male population at every generation
+
+'define the default variables'
+'initial population:'
+N=10000
+'male population ratio:'
+MR=0.49 
+'the fertility rate:'
+FR=0.93 
+'maximum number of girls in a row:'
+G=9 
+'Total # of generations to be simulated'
+GN=10 
+
+print('Here is the simulation of Policy 1: One Child, Case 1')
+gen_count=1
+for i in range(0,GN):
+    Total_Couples=math.trunc(N*MR)
+    Total_Babies=math.trunc(Total_Couples*FR)
+    Total_Parents=Total_Babies*2
+    Female=math.trunc(Total_Babies*(1-MR))
+    Male=Total_Babies-Female
+    print(gen_count,'. generation')
+    print('The total population: ', N)
+    print('The total # of couples: ', Total_Couples)
+    print('The total # of parents: (mom and dad counted seperately ', Total_Couples)
+    N=Total_Babies
+    gen_count=gen_count+1
+    print('The total number of babies, therefore the number of individuals at the (next) ', gen_count,'. generation: ',N )
+    print('The total number of boys: ', Male)
+    print('The total number of girls: ', Female,'\n')
+
+#Case2
+'define the default variables'
+'initial population:'
+N=10000
+'male population ratio:'
+MR=0.49 
+'the fertility rate:'
+FR=0.93 
+'maximum number of girls in a row:'
+G=9 
+'Total # of generations to be simulated'
+GN=10 
+
+print('Here is the simulation of Policy 1: One Child, Case 2')
+gen_count=1
+for i in range(0,GN):
+    Total_Couples=math.trunc(N*MR)
+    Total_Babies=math.trunc(Total_Couples*FR)
+    Female=math.trunc(Total_Babies*(1-MR))
+    Male=Total_Babies-Female
+    print(gen_count,'. generation')
+    print('The total population: ', N)
+    print('The total # of couples: ', Total_Couples)
+    print('The total # of parents: (mom and dad counted seperately ', Total_Babies*2)
+    MR=Male/Total_Babies
+    N=Total_Babies
+    gen_count=gen_count+1
+    print('The total number of babies, therefore the number of individuals at the (next) ', gen_count,'. generation: ',N )
+    print('The total number of boys: ', Male)
+    print('The total number of girls: ', Female,'\n')
+    
+    
+#Case3
+'define the default variables'
+'initial population:'
+N=10000
+'male population ratio:'
+MR=0.49 
+'the fertility rate:'
+FR=0.93 
+'maximum number of girls in a row:'
+G=9 
+'Total # of generations to be simulated'
+GN=10 
+if MR<=0.5:
+    Couple_Multiplier=MR
+elif MR>0.5:
+    Couple_Multiplier=1-MR
+
+
+'define the function that simulates next generation'
+def Baby_Count(N, Couple_Multiplier, FR):
+    Total_Couples=math.trunc(N*Couple_Multiplier)
+    Total_Babies=math.trunc(Total_Couples*FR)
+    Male=0
+    Female=0
+    for i in range(0, Total_Babies):
+        r=np.random.randint(1,3)
+        if r==1:
+            Male=Male+1
+        elif r==2:
+            Female=Female+1
+    return Total_Couples, Total_Babies, Female, Male
+
+#Policy 1: One child 
+#Case3
+print('Here is the simulation of Policy 1: One Child, Case 3')
+gen_count=1
+for i in range(0,GN):
+    Total_Couples, Total_Babies, Female, Male=Baby_Count(N,Couple_Multiplier,FR)
+    print(gen_count,'. generation')
+    print('The total population: ', N)
+    N=Total_Babies
+    print('The total # of couples: ', Total_Couples)
+    print('The total # of parents: (mom and dad counted seperately ', Total_Babies*2)
+    gen_count=gen_count+1
+    print('The total number of babies, therefore the number of individuals at the (next) ', gen_count,'. generation: ',N )
+    print('The total number of boys: ', Male)
+    print('The total number of girls: ', Female,'\n')
+    if N>0:
+        MR=Male/N
+        if MR<=0.5:
+           Couple_Multiplier=MR
+        elif MR>0.5:
+            Couple_Multiplier=1-MR
+
+
+#Policy 2: One Son
+#Case3
+
+'define the default variables'
+'initial population:'
+N=10000
+'male population ratio:'
+MR=0.49 
+'the fertility rate:'
+FR=0.93 
+'maximum number of girls in a row:'
+G=9 
+'Total # of generations to be simulated'
+GN=10 
+if MR<=0.5:
+    Couple_Multiplier=MR
+elif MR>0.5:
+    Couple_Multiplier=1-MR
+    
+    
+'define the function that simulates next generation'
+def Baby_Count_Policy2(N, Couple_Multiplier, FR):
+    Total_Couples=math.trunc(N*Couple_Multiplier)
+    Total_Fertile_Couples=math.trunc(Total_Couples*FR)
+    Male=0
+    Female=0
+    Total_Babies=0
+    for i in range(0, Total_Fertile_Couples):
+        check_male=0
+        Baby_Count_per_Couple=0
+        while check_male==0 and Baby_Count_per_Couple<9:
+            r=np.random.randint(1,3)
+            Baby_Count_per_Couple=Baby_Count_per_Couple+1
+            if r==1:
+                Male=Male+1
+                check_male=1
+            elif r==2:
+                Female=Female+1
+        Total_Babies=Male+Female
+    return Total_Couples, Total_Babies, Female, Male, 
+
+
+
+print('Here is the simulation of Policy 2: One Son, Case 3')
+gen_count=1
+for i in range(0,GN):
+    Total_Couples, Total_Babies, Female, Male=Baby_Count_Policy2(N,Couple_Multiplier,FR)
+    print(gen_count,'. generation')
+    print('The total population: ', N)
+    N=Total_Babies
+    print('The total # of couples: ', Total_Couples)
+    print('The total # of parents: (mom and dad counted seperately ', math.trunc(Total_Couples*2*FR))
+    gen_count=gen_count+1
+    print('The total number of babies, therefore the number of individuals at the (next) ', gen_count,'. generation: ',N )
+    print('The total number of boys: ', Male)
+    print('The total number of girls: ', Female,'\n')
+    if N>0:
+        MR=Male/N
+        if MR<=0.5:
+           Couple_Multiplier=MR
+        elif MR>0.5:
+            Couple_Multiplier=1-MR
+
+import datetime
+q=datetime.datetime.now() 
+# here the code to be run
+print('--------- SURE - ',datetime.datetime.now() - q) # this takes the time and calculates the difference and prints out
+#the required time to run the code in between
+    
+
